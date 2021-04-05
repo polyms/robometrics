@@ -1,8 +1,14 @@
 {
     "presets": [
-        "@babel/env",
-        "@babel/preset-typescript",
-        "@babel/preset-react",
+        [
+            "@babel/env",
+            {
+                "loose": true,
+                "modules": false
+            }
+        ],
+        "@babel/typescript",
+        "@babel/react",
         "minify"
     ],
     "plugins": [

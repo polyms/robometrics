@@ -1,21 +1,33 @@
+root: true
 env:
   browser: true
   es2021: true
+
 extends:
-  - 'plugin:react/recommended'
-  - airbnb
-parser: '@typescript-eslint/parser'
+  - airbnb-typescript
+  - airbnb/hooks
+  - plugin:@typescript-eslint/recommended
+  - prettier
+  - plugin:prettier/recommended
+
+globals:
+  React: readonly
+  ReactDOM: readonly
+
+rules:
+  radix: 0
+  no-nested-ternary: 0
+  react/jsx-filename-extension: off
+  react/react-in-jsx-scope: off
+  react/jsx-props-no-spreading: off
+  import/no-unresolved: off
+  import/prefer-default-export: off
+  prettier/prettier: error
+
+parser: "@typescript-eslint/parser"
 parserOptions:
+  project: ./tsconfig.json
   ecmaFeatures:
     jsx: true
   ecmaVersion: 12
   sourceType: module
-plugins:
-  - react
-  - '@typescript-eslint'
-globals:
-  React: readonly
-  ReactDOM: readonly
-rules:
-  react/jsx-filename-extension: 0
-  react/react-in-jsx-scope: 0
