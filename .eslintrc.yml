@@ -18,10 +18,11 @@ rules:
   radix: 0
   no-nested-ternary: 0
   react/jsx-filename-extension: off
-  react/react-in-jsx-scope: off
   react/jsx-props-no-spreading: off
-  import/no-unresolved: off
+  react/react-in-jsx-scope: off
+  react/destructuring-assignment: off
   import/prefer-default-export: off
+  no-undef: error
   prettier/prettier: error
 
 parser: "@typescript-eslint/parser"

@@ -1,16 +1,26 @@
-import { useTable, useSortBy, useGroupBy, useExpanded } from 'react-table';
+import React, { useMemo } from 'react';
+import {
+  Column,
+  useExpanded,
+  useGroupBy,
+  useSortBy,
+  useTable
+} from 'react-table';
 import { TestNode } from './contants';
 
 type StatisticTableProps = {
   data: TestNode[];
-  info: TestNode;
+  info: {
+    generator: string | null;
+    generated: string | null;
+  };
 };
 
 export const StatisticTable: React.FunctionComponent<StatisticTableProps> = ({
   data,
   info
 }: StatisticTableProps) => {
-  const columns = React.useMemo(
+  const columns = useMemo<Array<Column<TestNode>>>(
     () => [
       {
         Header: 'Type',
@@ -55,18 +65,16 @@ export const StatisticTable: React.FunctionComponent<StatisticTableProps> = ({
         }
       }
     },
-    useSortBy,
     useGroupBy,
+    useSortBy,
     useExpanded
   );
-
-  const firstPageRows = rows.slice(0, 20);
 
   return (
     <div className="table-responsive">
       <table className="table" {...getTableProps()}>
         <caption>{`${info.generator} - ${info.generated}`}</caption>
-        <thead className="table-light">
+        <thead>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
@@ -76,15 +84,7 @@ export const StatisticTable: React.FunctionComponent<StatisticTableProps> = ({
                   {column.render('Header')}
                   {/* Add a sort direction indicator */}
                   <span>
-                    {column.isSorted ? (
-                      column.isSortedDesc ? (
-                        <span className="fa-sort-up" />
-                      ) : (
-                        <span className="fa-sort-down" />
-                      )
-                    ) : (
-                      ''
-                    )}
+                    {column.isSorted ? (column.isSortedDesc ? '👇' : '👉') : ''}
                   </span>
                 </th>
               ))}
@@ -92,7 +92,7 @@ export const StatisticTable: React.FunctionComponent<StatisticTableProps> = ({
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {firstPageRows.map((row) => {
+          {rows.map((row) => {
             prepareRow(row);
             return (
               <tr {...row.getRowProps()}>

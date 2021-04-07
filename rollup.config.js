@@ -6,6 +6,7 @@ const globals = {
   react: 'React',
   'react-dom': 'ReactDOM',
   'react-transition-group': 'ReactTransitionGroup',
+  'react-transition-group/Transition': 'ReactTransitionGroup.Transition',
   'react-table': 'ReactTable'
 };
 
@@ -20,12 +21,12 @@ export default {
     sourcemapFile: 'public/robot.js.map'
   },
   plugins: [
-    nodeResolve({ browser: true, extensions: ['.tsx'] }),
+    nodeResolve({ browser: true, extensions: ['.ts', '.tsx', '.js'] }),
     commonjs(),
     babel({
       extensions: ['.ts', '.tsx'],
       babelHelpers: 'bundled',
-      include: ['src/**/*'],
+      include: ['src/**/*', /node_modules\/date-fns/],
       exclude: /node_modules/
     })
   ],

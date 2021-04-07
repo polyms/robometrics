@@ -1,6 +1,8 @@
+import React from 'react';
+
 type NavItemProps = React.PropsWithChildren<{
   tab: string;
-  activeTab: string;
+  activeTab: string | undefined;
   setTab: (tab: string) => void;
 }>;
 

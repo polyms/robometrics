@@ -1,8 +1,9 @@
+import React from 'react';
 import { CSSTransition } from 'react-transition-group';
 
 type TabPaneProps = React.PropsWithChildren<{
   tab: string;
-  activeTab: string;
+  activeTab: string | undefined;
 }>;
 
 export const TabPane: React.FunctionComponent<TabPaneProps> = ({

@@ -8,8 +8,8 @@
             }
         ],
         "@babel/typescript",
-        "@babel/react",
-        "minify"
+        "@babel/react"
+        // "minify"
     ],
     "plugins": [
         "@babel/proposal-class-properties",
