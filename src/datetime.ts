@@ -1,4 +1,5 @@
-import { Duration, format } from 'date-fns';
+import type { Duration } from 'date-fns';
+import format from 'date-fns/format';
 import parse from 'date-fns/parse';
 
 const FORMAT_PARSE = 'yyyyMMdd HH:mm:ss.SSS';
