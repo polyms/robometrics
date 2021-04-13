@@ -1,36 +1,43 @@
 FROM python:3.9.2-slim-buster
 
-# Set the working directory environment variable
-ENV ROBOT_WORK_DIR /home/robot/app
+ARG USERNAME=robot
+ARG USER_GID=1000
 
-# Set the reports directory environment variable
-ENV ROBOT_REPORTS_DIR /home/robot/reports
-
-# Add PYTHON PATH environment variable
-ENV PYTHONPATH="$PYTHONPATH:$ROBOT_WORK_DIR"
-ENV PYTHONWARNINGS="ignore:Unverified HTTPS request"
-ENV ZSH_THEME af-magic
+ENV ROBOT_WORK_DIR=/app \
+    ROBOT_REPORTS_DIR=/app/reports \
+    PYTHONPATH="$PYTHONPATH:$ROBOT_WORK_DIR" \
+    PYTHONWARNINGS="ignore:Unverified HTTPS request"
 
 RUN apt update \
-    && apt install -y --no-install-recommends zsh curl git openssh-server \
+    && apt install -y --no-install-recommends zsh curl git openssh-server sudo \
     && rm -rf /var/lib/apt/lists/* \
     && apt autoclean \
-    && groupadd --gid 1000 robot \
-    && useradd --uid 1000 --gid robot --shell /bin/zsh --create-home robot
+    && groupadd --gid $USER_GID $USERNAME \
+    && useradd --uid $USER_GID --gid $USERNAME --shell /bin/zsh --create-home $USERNAME \
+    && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
+    && chmod 0440 /etc/sudoers.d/$USERNAME \
+    && mkdir -p \
+    ${ROBOT_WORK_DIR} \
+    ${ROBOT_REPORTS_DIR} \
+    /home/$USERNAME/.vscode-server/extensions \
+    /home/$USERNAME/.vscode-server-insiders/extensions \
+    && chown -R $USERNAME \
+    ${ROBOT_WORK_DIR} \
+    ${ROBOT_REPORTS_DIR} \
+    /home/$USERNAME/.vscode-server \
+    /home/$USERNAME/.vscode-server-insiders
 
-USER robot
+USER $USERNAME
+
+WORKDIR ${ROBOT_WORK_DIR}
+VOLUME ${ROBOT_REPORTS_DIR}
 
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" \
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/polyms/devcontainers/main/.zshrc -o /home/robot/.zshrc)" \
     && git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting \
     && git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions \
-    && mkdir -p ${ROBOT_WORK_DIR} \
-    && mkdir -p ${ROBOT_REPORTS_DIR} \
     && export ROBOT_OPTIONS="--outputdir ${ROBOT_REPORTS_DIR}" \
-    && echo 'export PATH=$PATH:/home/robot/.local/bin' >> ~/.zshrc
-
-WORKDIR ${ROBOT_WORK_DIR}
-VOLUME ${ROBOT_REPORTS_DIR}
+    && echo 'export PATH=$PATH:/home/$USERNAME/.local/bin' >> ~/.zshrc
 
 RUN pip install --upgrade \
     pipenv \
@@ -39,6 +46,7 @@ RUN pip install --upgrade \
     robotframework-seleniumscreenshots \
     robotframework-requests
 
-COPY --chown=robot:robot ./public/index.html ./public/robot.min.js ${ROBOT_WORK_DIR}/robot/
+COPY --chown=$USERNAME:$USERNAME ./public/index.html ./public/robot.min.js ${ROBOT_WORK_DIR}/robot/
+COPY --chown=$USERNAME:$USERNAME ./public/index.html ./public/robot.min.js ${ROBOT_REPORTS_DIR}/
 
-CMD ["robot", "--outputdir", "reports", "tests"]
+CMD ["python", "-m", "robot", "tests"]
