@@ -81,7 +81,7 @@ const Main = () => {
       <div className="row min-vh-100">
         <nav
           id="sidebarMenu"
-          className="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse"
+          className="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse border-end"
         >
           <div className="position-sticky pt-3">
             <ul className="nav nav-pills flex-column">
@@ -100,7 +100,9 @@ const Main = () => {
             <TabPane activeTab={tab} tab="statistic">
               <h2 className="mt-3 mb-4">Statistic</h2>
 
-              <StatisticTable data={statisticData} info={info} />
+              <div className="card">
+                <StatisticTable data={statisticData} info={info} />
+              </div>
             </TabPane>
             <TabPane activeTab={tab} tab="tests">
               <h2 className="mt-3 mb-4">Tests</h2>

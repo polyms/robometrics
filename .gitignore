@@ -105,3 +105,16 @@ dist
 .devcontainer/docker-compose.yml
 output.xml
 fontawesome/
+
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
+
+public/*
+!public/*.html
+!public/*.js
+!public/styles.css

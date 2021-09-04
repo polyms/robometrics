@@ -43,10 +43,9 @@ RUN pip install --upgrade \
     pipenv \
     robotframework \
     robotframework-seleniumlibrary \
-    robotframework-seleniumscreenshots \
-    robotframework-requests
+    robotframework-requests \
+    pyyaml
 
-COPY --chown=$USERNAME:$USERNAME ./public/index.html ./public/robot.min.js ${ROBOT_WORK_DIR}/robot/
-COPY --chown=$USERNAME:$USERNAME ./public/index.html ./public/robot.min.js ${ROBOT_REPORTS_DIR}/
+COPY --chown=$USERNAME:$USERNAME ./public/index.html ./public/robot.min.js ./public/styles.css ${ROBOT_REPORTS_DIR}/
 
 CMD ["python", "-m", "robot", "tests"]

@@ -46,34 +46,29 @@ export const StatisticTable: React.FunctionComponent<StatisticTableProps> = ({
     []
   );
 
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow
-  } = useTable(
-    {
-      columns,
-      data,
-      initialState: {
-        groupBy: ['nodeName'],
-        expanded: {
-          'nodeName:tag': true,
-          'nodeName:suite': true,
-          'nodeName:total': true
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
+    useTable(
+      {
+        columns,
+        data,
+        initialState: {
+          groupBy: ['nodeName'],
+          expanded: {
+            'nodeName:tag': true,
+            'nodeName:suite': true,
+            'nodeName:total': true
+          }
         }
-      }
-    },
-    useGroupBy,
-    useSortBy,
-    useExpanded
-  );
+      },
+      useGroupBy,
+      useSortBy,
+      useExpanded
+    );
 
   return (
     <div className="table-responsive">
-      <table className="table" {...getTableProps()}>
-        <caption>{`${info.generator} - ${info.generated}`}</caption>
+      <table className="table mb-0" {...getTableProps()}>
+        <caption className="px-2 small">{`${info.generator} - ${info.generated}`}</caption>
         <thead>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
@@ -100,7 +95,7 @@ export const StatisticTable: React.FunctionComponent<StatisticTableProps> = ({
                   <td
                     className={
                       row.isExpanded
-                        ? 'table-secondary text-uppercase fs-5 fw-bold'
+                        ? 'table-primary text-primary text-uppercase fs-5 fw-bold'
                         : ''
                     }
                     {...cell.getCellProps()}

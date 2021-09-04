@@ -62,7 +62,7 @@ export const Keywords: React.FunctionComponent<KeywordsProps> = ({
         item.msgs.push({
           id: `${path}__msg__${item.msgs.length}`,
           timestamp: formatDateFrom(msg.getAttribute('timestamp') as string),
-          html: msg.getAttribute('html') === 'yes',
+          html: msg.getAttribute('html') === 'true',
           level: msg.getAttribute('level') as string,
           content: msg.textContent
         });
