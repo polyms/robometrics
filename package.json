@@ -6,8 +6,8 @@
   "license": "MIT",
   "scripts": {
     "es": "eslint",
-    "d:build": "docker build -t docker.pkg.github.com/polyms/robometrics/robometrics .",
-    "d:push": "docker push docker.pkg.github.com/polyms/robometrics/robometrics",
+    "d:build": "docker build -t ghcr.io/polyms/robometrics/robometrics:latest .",
+    "d:push": "docker push ghcr.io/polyms/robometrics/robometrics:latest",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "lint:fix": "eslint --fix \"src/**/*.{ts,tsx}\"",
     "build": "rollup -wc"
