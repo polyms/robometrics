@@ -1,117 +1,131 @@
-import React, { useMemo } from 'react';
 import {
-  Column,
-  useExpanded,
-  useGroupBy,
-  useSortBy,
-  useTable
-} from 'react-table';
-import { TestNode } from './contants';
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  getExpandedRowModel,
+  getGroupedRowModel,
+  useReactTable,
+} from '@tanstack/react-table'
+import React, { useMemo } from 'react'
+
+import { TestNode } from './contants'
 
 type StatisticTableProps = {
-  data: TestNode[];
+  data: TestNode[]
   info: {
-    generator: string | null;
-    generated: string | null;
-  };
-};
+    generator: string | null
+    generated: string | null
+  }
+}
 
 export const StatisticTable: React.FunctionComponent<StatisticTableProps> = ({
   data,
-  info
+  info,
 }: StatisticTableProps) => {
-  const columns = useMemo<Array<Column<TestNode>>>(
+  const columns = useMemo<Array<ColumnDef<TestNode>>>(
     () => [
       {
-        Header: 'Type',
-        accessor: 'nodeName'
+        header: 'Type',
+        accessorKey: 'nodeName',
       },
       {
-        Header: 'Name',
-        accessor: 'name'
+        header: 'Name',
+        accessorKey: 'name',
       },
       {
-        Header: 'Total',
-        accessor: 'total'
+        header: 'Total',
+        accessorKey: 'total',
       },
       {
-        Header: 'Pass',
-        accessor: 'pass'
+        header: 'Pass',
+        accessorKey: 'pass',
       },
       {
-        Header: 'Fail',
-        accessor: 'fail'
-      }
+        header: 'Fail',
+        accessorKey: 'fail',
+      },
     ],
-    []
-  );
+    [],
+  )
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable(
-      {
-        columns,
-        data,
-        initialState: {
-          groupBy: ['nodeName'],
-          expanded: {
-            'nodeName:tag': true,
-            'nodeName:suite': true,
-            'nodeName:total': true
-          }
-        }
+  const { getRowModel, getHeaderGroups } = useReactTable({
+    columns,
+    data,
+    initialState: {
+      grouping: ['nodeName'],
+      expanded: {
+        'nodeName:tag': true,
+        'nodeName:suite': true,
+        'nodeName:total': true,
       },
-      useGroupBy,
-      useSortBy,
-      useExpanded
-    );
+    },
+    getCoreRowModel: getCoreRowModel(),
+    getGroupedRowModel: getGroupedRowModel(),
+    getExpandedRowModel: getExpandedRowModel(),
+  })
 
   return (
-    <div className="table-responsive">
-      <table className="table mb-0" {...getTableProps()}>
-        <caption className="px-2 small">{`${info.generator} - ${info.generated}`}</caption>
+    <div className='table-responsive m-1'>
+      <table className='table mb-0'>
+        <caption className='px-2 small'>{`${info.generator} - ${info.generated}`}</caption>
         <thead>
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
+          {getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
                 // Add the sorting props to control sorting. For this example
                 // we can add them into the header props
-                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                  {column.render('Header')}
-                  {/* Add a sort direction indicator */}
-                  <span>
-                    {column.isSorted ? (column.isSortedDesc ? '👇' : '👉') : ''}
-                  </span>
+                <th key={header.id} colSpan={header.colSpan}>
+                  {flexRender(header.column.columnDef.header, header.getContext())}
                 </th>
               ))}
             </tr>
           ))}
         </thead>
-        <tbody {...getTableBodyProps()}>
-          {rows.map((row) => {
-            prepareRow(row);
+        <tbody>
+          {getRowModel().rows.map((row) => {
             return (
-              <tr {...row.getRowProps()}>
-                {row.cells.map((cell) => (
+              <tr key={row.id}>
+                {row.getVisibleCells().map((cell) => (
                   <td
+                    key={cell.id}
                     className={
-                      row.isExpanded
+                      row.getIsExpanded()
                         ? 'table-primary text-primary text-uppercase fs-5 fw-bold'
                         : ''
                     }
-                    {...cell.getCellProps()}
                   >
-                    {cell.isAggregated
-                      ? cell.render('Aggregated')
-                      : cell.isPlaceholder
-                      ? null
-                      : cell.render('Cell')}
+                    {cell.getIsGrouped() ? (
+                      <>
+                        <button
+                          onClick={row.getToggleExpandedHandler()}
+                          style={{
+                            cursor: row.getCanExpand() ? 'pointer' : 'normal',
+                          }}
+                        >
+                          {row.getIsExpanded() ? '👇' : '👉'}{' '}
+                        </button>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())} (
+                        {row.subRows.length})
+                      </>
+                    ) : cell.getIsAggregated() ? (
+                      // If the cell is aggregated, use the Aggregated
+                      // renderer for cell
+                      flexRender(
+                        cell.column.columnDef.aggregatedCell ??
+                          cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )
+                    ) : cell.getIsPlaceholder() ? null : ( // For cells with repeated values, render null
+                      // Otherwise, just render the regular cell
+                      flexRender(cell.column.columnDef.cell, cell.getContext())
+                    )}
                   </td>
                 ))}
               </tr>
-            );
+            )
           })}
         </tbody>
       </table>
     </div>
-  );
-};
+  )
+}

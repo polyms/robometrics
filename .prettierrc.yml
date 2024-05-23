@@ -1,0 +1,24 @@
+printWidth: 90
+singleQuote: true
+jsxSingleQuote: true
+useTabs: false
+semi: false
+plugins:
+  - '@trivago/prettier-plugin-sort-imports'
+
+importOrderSeparation: true
+importOrderSortSpecifiers: true
+importOrder:
+  - <THIRD_PARTY_MODULES>
+  - ^[~]
+  - ^[./]
+
+overrides:
+  - files:
+      - .*rc
+      - '*.json'
+      - .*.json
+    options:
+      parser: json
+      useTabs: true
+      tabWidth: 4

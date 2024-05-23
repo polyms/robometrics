@@ -118,3 +118,6 @@ public/*
 !public/*.html
 !public/*.js
 !public/styles.css
+
+.nx/cache
+.swc

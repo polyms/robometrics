@@ -1,27 +1,39 @@
-import React from 'react';
-import { CSSTransition } from 'react-transition-group';
+import { useTabPanel } from '@react-aria/tabs'
+import { TabListState } from '@react-stately/tabs'
+import { useRef } from 'react'
 
-type TabPaneProps = React.PropsWithChildren<{
-  tab: string;
-  activeTab: string | undefined;
-}>;
+export const TabPanel = ({
+  state,
+  // ...props
+}: TabPaneProps) => {
+  const ref = useRef<HTMLDivElement>(null)
+  const { tabPanelProps } = useTabPanel({}, state, ref)
 
-export const TabPane: React.FunctionComponent<TabPaneProps> = ({
-  tab,
-  activeTab,
-  children
-}: TabPaneProps) => (
-  <CSSTransition
-    classNames={{
-      enter: 'active',
-      enterDone: 'active show',
-      appear: 'active'
-    }}
-    timeout={150}
-    in={tab === activeTab}
-  >
-    <div className="tab-pane fade" role="tabpanel">
-      {children}
+  return (
+    // <CSSTransition
+    //   classNames={{
+    //     enter: 'active',
+    //     enterDone: 'active show',
+    //     appear: 'active',
+    //   }}
+    //   timeout={150}
+    //   in={tab === activeTab}
+    //   nodeRef={ref}
+    // >
+    <div
+      {...tabPanelProps}
+      ref={ref}
+      className='tab-pane fade show active'
+      role='tabpanel'
+    >
+      {state.selectedItem?.props.children}
     </div>
-  </CSSTransition>
-);
+    // </CSSTransition>
+  )
+}
+
+// ======================================================================================
+
+type TabPaneProps = {
+  state: TabListState<object>
+}

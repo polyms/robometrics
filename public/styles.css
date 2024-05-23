@@ -1,5 +1,9 @@
-body {
-  font-family: 'Roboto Mono', monospace;
+:root {
+  --bs-body-font-family: 'Roboto Mono', 'Segoe UI', Roboto, 'Helvetica Neue', 'Noto Sans',
+    'Liberation Sans', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji';
+  --bs-font-monospace: 'Roboto Mono', SFMono-Regular, Menlo, Monaco, Consolas,
+    'Liberation Mono', 'Courier New', monospace;
 }
 
 @keyframes breath {

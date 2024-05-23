@@ -1,0 +1,80 @@
+{
+	"$schema": "./node_modules/nx/schemas/nx-schema.json",
+	"defaultBase": "main",
+	"defaultProject": "robometrics",
+	"namedInputs": {
+		"default": ["{projectRoot}/**/*", "sharedGlobals"],
+		"production": [
+			"default",
+			"!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
+			"!{projectRoot}/tsconfig.spec.json",
+			"!{projectRoot}/.eslintrc.yml",
+			"!{projectRoot}/eslint.config.js"
+		],
+		"sharedGlobals": []
+	},
+	"plugins": [
+		{
+			"plugin": "@nx/eslint/plugin",
+			"options": {
+				"targetName": "lint",
+				"extensions": ["ts", "tsx", "js", "jsx", "html", "vue"]
+			}
+		},
+		{
+			"plugin": "@nx/vite/plugin",
+			"options": {
+				"buildTargetName": "build",
+				"testTargetName": "test",
+				"serveTargetName": "serve",
+				"previewTargetName": "preview",
+				"serveStaticTargetName": "serve-static"
+			}
+		}
+	],
+	"generators": {
+		"@nx/react": {
+			"library": {
+				"style": "styled-components",
+				"linter": "eslint",
+				"bundler": "vite",
+				"compiler": "swc",
+				"projectNameAndRootFormat": "derived",
+				"publishable": true,
+				"unitTestRunner": "none"
+			},
+			"application": {
+				"babel": true,
+				"style": "styled-components",
+				"linter": "eslint",
+				"bundler": "vite",
+				"compiler": "swc",
+				"e2eTestRunner": "none",
+				"projectNameAndRootFormat": "derived",
+				"routing": false,
+				"unitTestRunner": "none"
+			},
+			"component": {
+				"style": "styled-components"
+			}
+		}
+	},
+	"release": {
+		"projects": ["block-based"],
+		"projectsRelationship": "independent",
+		"releaseTagPattern": "dev/{projectName}@{version}",
+		"changelog": {
+			"projectChangelogs": false,
+			"workspaceChangelog": false
+		},
+		"version": {
+			"git": {
+				"stageChanges": true,
+				"tag": true,
+				"commit": true,
+				"commitMessage": "chore(release): {projectName}@{version}-dev"
+			}
+		}
+	},
+	"nxCloudAccessToken": "YmYzZTliNDYtN2Y0Mi00MDc2LThkMDktOGM0ZjVkZjliN2E0fHJlYWQtd3JpdGU="
+}
